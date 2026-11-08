@@ -1,56 +1,62 @@
-# Welcome to your Expo app 👋
+# WiiUp — iOS rideshare app (front end MVP)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+React Native + Expo (SDK 58) + Expo Router + TypeScript. One app with **Ride** and **Drive** modes.
+Every screen talks to `src/api/client.ts`. By default that is an in-memory mock (`src/api/mock.ts`) that simulates
+drivers, matching, live car movement and ride requests; set `EXPO_PUBLIC_API_URL` to use the WiiUp server in `server/` instead.
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Run it
 
 ```bash
-npm run reset-project
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+- **iPhone:** install **Expo Go** from the App Store and scan the QR code with the Camera app.
+- **iOS Simulator:** requires full Xcode. Then press `i` in the Expo terminal.
 
-### Other setup steps
+Sign in with any name and phone number. The demo verification code is **1234**.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Demo walkthrough
 
-## Learn more
+**Rider:** Where to? → pick a place → choose WiiUp Go / Comfort / XL → Confirm → watch the driver get matched,
+drive to you and take you to the destination → rate + tip → see it in Account → Your trips.
 
-To learn more about developing your project with Expo, look at the following resources:
+**Driver:** Account → Mode: Drive → Go online → a request arrives within a few seconds (15 s to accept) →
+Accept → I've arrived → Start trip → Complete trip → earnings update (tap the $ pill or chart icon).
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Simulation speeds live in `MOCK_TIMING` in `src/api/mock.ts`.
 
-## Join the community
+## Structure
 
-Join our community of developers creating universal apps.
+```
+src/app/            Expo Router screens
+  (auth)/           welcome, sign-in
+  (rider)/          index (map home), search, options, trip, rate
+  (driver)/         drive (online/offline + offers), drive-trip, earnings
+  profile.tsx       account, Ride/Drive switch, sign out
+  history.tsx       past rides
+src/api/            types, RideService interface (client.ts), mock implementation
+src/store/          zustand stores (auth, location, ride, driver) persisted to AsyncStorage
+src/lib/            fare calculation, geo helpers, place search (expo-location geocoding + seeded places)
+src/components/     shared UI (Sheet, Button, RideTierCard, DriverCard, map markers, …)
+src/theme.ts        brand colors (light/dark), spacing, type
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Connecting the backend
+
+The WiiUp server lives in `server/`; see `server/README.md`. Start it with `cd server && npm install && npm run dev`,
+then put `EXPO_PUBLIC_API_URL=http://<your computer's network address>:8787` in `.env.local` and restart Expo.
+Without that variable the app runs on the mock. Both implement the `RideService` interface in `src/api/client.ts`
+(`src/api/http.ts` for the server, `src/api/mock.ts` for the mock).
+
+## Not in this MVP
+
+Real payments (fares are estimates; card is a placeholder), real SMS auth, turn-by-turn routing
+(routes are approximated), push notifications, chat/calls.
+
+## Checks
+
+```bash
+npx tsc --noEmit
+npx expo lint
+```

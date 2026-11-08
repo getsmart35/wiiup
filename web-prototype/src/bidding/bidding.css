@@ -1,0 +1,63 @@
+/* Trip bidding demo: two phones side by side, on the prototype's tokens (styles.css) */
+:root { --map-land: #eef1ee; --map-street: #ffffff; --map-water: #b9dcf0; --map-text: #3d4540; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) { --map-land: #151915; --map-street: #262b26; --map-water: #10283a; --map-text: #b7c0b9; }
+}
+:root[data-theme='dark'] { --map-land: #151915; --map-street: #262b26; --map-water: #10283a; --map-text: #b7c0b9; }
+
+body { padding-block: 32px; }
+.bd-page { max-width: 880px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+.bd-head { display: flex; flex-direction: column; gap: 12px; }
+.bd-head h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; text-wrap: balance; }
+.bd-head p { color: var(--text2); font-size: 16px; line-height: 1.5; max-width: 62ch; }
+.bd-head b { color: var(--text); }
+.bd-reset { width: auto; align-self: flex-start; padding: 0 18px; }
+.bd-phones { display: grid; grid-template-columns: repeat(2, minmax(0, 390px)); justify-content: center; gap: 40px; }
+@media (max-width: 860px) { .bd-phones { grid-template-columns: minmax(0, 390px); } }
+.bd-phones section { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.bd-label { text-align: center; }
+.bd-phone { height: 780px; justify-self: auto; }
+
+/* Rider map */
+.bd-map { position: absolute; inset: 0 0 auto; width: 100%; height: 48%; }
+.bd-rider { background: var(--map-land); }
+.bd-land { fill: var(--map-land); }
+.bd-lake { fill: var(--map-water); }
+.bd-river { fill: none; stroke: var(--map-water); stroke-width: 10; }
+.bd-street { stroke: var(--map-street); stroke-width: 5; }
+.bd-route { fill: none; stroke: var(--brand); stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; }
+.bd-pin-a { fill: var(--text); stroke: var(--bg); stroke-width: 3; }
+.bd-pin-b { fill: var(--brand); stroke: var(--bg); stroke-width: 3; }
+.bd-car { fill: var(--text); stroke: var(--brand); stroke-width: 3; }
+.bd-maptext { font-size: 12px; font-weight: 700; fill: var(--map-text); }
+.bd-sheet { max-height: 64%; }
+
+/* Bids the rider chooses from */
+.bd-bids { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.bd-bid { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 16px; background: var(--surface); border: 2px solid transparent; animation: up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.bd-bid.low { border-color: var(--brand); }
+.bd-bid.mine { box-shadow: inset 4px 0 0 var(--text); }
+.bd-bid-top { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.bd-bid-top .t-cap { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bd-fare { display: flex; flex-direction: column; align-items: flex-end; }
+.bd-fare b { font-size: 22px; font-weight: 800; }
+.bd-under { color: var(--brand-dark); font-weight: 600; }
+:root[data-theme='dark'] .bd-under { color: var(--brand); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) .bd-under { color: var(--brand); } }
+.bd-wait { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 24px 0; color: var(--text2); font-weight: 600; }
+.btn.slim { height: 44px; font-size: 15px; border-radius: 12px; }
+
+/* Driver */
+.bd-pill { box-shadow: none; background: var(--surface); height: 36px; font-size: 14px; }
+.bd-seg { align-self: stretch; display: grid; grid-template-columns: 1fr 1fr; }
+.bd-seg button { position: relative; }
+.bd-dot { position: absolute; top: 8px; right: 14px; width: 8px; height: 8px; border-radius: 4px; background: var(--danger); }
+.bd-trip.new { box-shadow: 0 0 0 2px var(--brand); animation: up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.bd-trip .leg.boxed, .bd-trip .leg { padding-top: 0; }
+.bd-bidrow { display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 12px; align-items: center; padding-top: 8px; border-top: 1px solid var(--border); }
+.bd-big { font-size: 26px; font-weight: 800; letter-spacing: -0.3px; }
+.bd-full { color: var(--danger); font-weight: 700; }
+.bd-status { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px; background: var(--bg); font-size: 13px; font-weight: 600; }
+.bd-status.accepted { background: var(--brand-soft); }
+.bd-status.lost, .bd-status.declined, .bd-status.expired { color: var(--text2); }
+@media (prefers-reduced-motion: reduce) { .bd-bid, .bd-trip.new { animation: none; } }
